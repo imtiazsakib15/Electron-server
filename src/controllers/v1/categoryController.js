@@ -31,6 +31,24 @@ const createCategory = async (req, res, next) => {
   }
 };
 
+const updateCategory = async (req, res, next) => {
+  try {
+    const { slug } = req.params;
+    const { name } = req.body;
+    const filter = { slug };
+    const update = {
+      $set: { name, slug: name.toLowerCase().split(" ").join("-") },
+    };
+
+    const result = await Category.findOneAndUpdate(filter, update, {
+      new: true,
+    });
+    res.status(200).send(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
 const deleteCategory = async (req, res, next) => {
   try {
     const { slug } = req.params;
@@ -41,4 +59,10 @@ const deleteCategory = async (req, res, next) => {
   }
 };
 
-module.exports = { getCategories, getCategory, createCategory, deleteCategory };
+module.exports = {
+  getCategories,
+  getCategory,
+  createCategory,
+  updateCategory,
+  deleteCategory,
+};
