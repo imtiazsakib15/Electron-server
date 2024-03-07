@@ -11,8 +11,8 @@ const getCategories = async (req, res, next) => {
 
 const getCategory = async (req, res, next) => {
   try {
-    const { slug } = req.params;
-    const category = (await Category.findOne({ slug })) || {};
+    const id = req.params?.id;
+    const category = (await Category.findById(id)) || {};
     res.status(200).send(category);
   } catch (error) {
     next(error);
@@ -33,14 +33,15 @@ const createCategory = async (req, res, next) => {
 
 const updateCategory = async (req, res, next) => {
   try {
-    const { slug } = req.params;
-    const { name } = req.body;
-    const filter = { slug };
+    const id = req.params?.id;
+    const { name, image } = req.body;
+
+    const slug = name.toLowerCase().split(" ").join("-");
     const update = {
-      $set: { name, slug: name.toLowerCase().split(" ").join("-") },
+      $set: { name, slug, image },
     };
 
-    const result = await Category.findOneAndUpdate(filter, update, {
+    const result = await Category.findByIdAndUpdate(id, update, {
       new: true,
     });
     res.status(200).send(result);
@@ -51,8 +52,8 @@ const updateCategory = async (req, res, next) => {
 
 const deleteCategory = async (req, res, next) => {
   try {
-    const { slug } = req.params;
-    const result = await Category.deleteOne({ slug });
+    const id = req.params?.id;
+    const result = await Category.findByIdAndDelete(id);
     res.status(200).send(result);
   } catch (error) {
     next(error);
