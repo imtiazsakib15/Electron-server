@@ -35,4 +35,14 @@ const createProduct = async (req, res, next) => {
   }
 };
 
-module.exports = { getProducts, getProduct, createProduct };
+const deleteProduct = async (req, res, next) => {
+  try {
+    const id = req.params?.id;
+    const result = await Product.findByIdAndDelete(id);
+    res.status(200).send(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { getProducts, getProduct, createProduct, deleteProduct };
