@@ -35,6 +35,42 @@ const createProduct = async (req, res, next) => {
   }
 };
 
+const updateProduct = async (req, res, next) => {
+  try {
+    const id = req.params?.id;
+    const {
+      name,
+      image,
+      price,
+      oldPrice,
+      description,
+      category,
+      availability,
+    } = req.body;
+
+    const slug = name.toLowerCase().split(" ").join("-");
+    const update = {
+      $set: {
+        name,
+        slug,
+        image,
+        price,
+        oldPrice,
+        description,
+        category,
+        availability,
+      },
+    };
+
+    const result = await Product.findByIdAndUpdate(id, update, {
+      new: true,
+    });
+    res.status(200).send(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
 const deleteProduct = async (req, res, next) => {
   try {
     const id = req.params?.id;
@@ -45,4 +81,10 @@ const deleteProduct = async (req, res, next) => {
   }
 };
 
-module.exports = { getProducts, getProduct, createProduct, deleteProduct };
+module.exports = {
+  getProducts,
+  getProduct,
+  createProduct,
+  updateProduct,
+  deleteProduct,
+};
