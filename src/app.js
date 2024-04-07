@@ -1,7 +1,6 @@
 const express = require("express");
 const applyMiddleware = require("./middlewares");
 const globalErrorHandler = require("./utils/globalErrorHandler");
-const connectDB = require("./db/connectDB");
 const userRoutes = require("./routes/v1/userRoutes");
 const authRoutes = require("./routes/v1/authRoutes");
 const categoryRoutes = require("./routes/v1/categoryRoutes");
@@ -9,7 +8,6 @@ const productRoutes = require("./routes/v1/productRoutes");
 
 require("dotenv").config();
 const app = express();
-const port = process.env.PORT || 5000;
 
 applyMiddleware(app);
 
@@ -34,11 +32,4 @@ app.all("*", (req, res, next) => {
 // Error handling middleware
 app.use(globalErrorHandler);
 
-const main = async () => {
-  await connectDB();
-  app.listen(port, () => {
-    console.log(`Electron server in running on port ${port}`);
-  });
-};
-
-main();
+module.exports = app;
